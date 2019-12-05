@@ -5,7 +5,7 @@ class Graph {
 
   addVertex(vertex) {
     if(!this.adjacencyList[vertex]) {
-      this.adjacencyListVertex[vertex] = [];
+      this.adjacencyList[vertex] = [];
     }
   }
 
@@ -42,6 +42,7 @@ class Graph {
   iterativeDFS(vertex) {
     let stack = [];
     let visited = {};
+    let stacked = {};
     let results = [];
     stack.push(vertex);
 
@@ -50,7 +51,8 @@ class Graph {
       results.push(current);
       visited[current] = true;
       this.adjacencyList[current].forEach((neighbor) => {
-        if (!visited[neighbor]) {
+        if (!visited[neighbor] && !stacked[neighbor]) {
+          stacked[neighbor] = true;
           stack.push(neighbor);
         }
       });
@@ -78,4 +80,3 @@ class Graph {
     return results;
   }
 }
-
