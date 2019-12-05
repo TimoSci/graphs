@@ -34,4 +34,15 @@ class DoublyLinkedList {
         return node.data;
     }
 
+    isempty(){
+      if(this.head.next.next === null)
+      {
+          return true;
+      }
+      else
+      {
+          return false;
+      }
+    }
+
 }
