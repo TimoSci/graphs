@@ -42,18 +42,17 @@ class Graph {
   iterativeDFS(vertex) {
     let stack = [];
     let visited = {};
-    let stacked = {};
     let results = [];
     stack.push(vertex);
+    visited[vertex] = true;
 
     while (stack.length) {
       let current = stack.pop();
       results.push(current);
-      visited[current] = true;
       this.adjacencyList[current].forEach((neighbor) => {
-        if (!visited[neighbor] && !stacked[neighbor]) {
-          stacked[neighbor] = true;
+        if (!visited[neighbor]) {
           stack.push(neighbor);
+          visited[neighbor] = true;
         }
       });
     }
