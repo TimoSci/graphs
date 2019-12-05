@@ -19,15 +19,24 @@ class Graph {
     this.adjacencyList[v2] = this.adjacencyList[v2].filter(v => v !== v1);
   }
 
-  recursiveDFS(vertex) {
+  recursiveDFS(vertex){
     let results = [];
+    this.lazyRecursiveDFS(vertex, function(vertex){
+      results.push(vertex)
+    }
+    )
+    return results;
+  }
+
+  lazyRecursiveDFS(vertex,callback) {
     const adjacencyList = this.adjacencyList;
     let visited = {};
 
     function helper(node) {
       if (!node) { return; }
 
-      results.push(node);
+      callback(node);
+
       visited[node] = true;
       adjacencyList[node].forEach((neighbor) => {
         if (!visited[neighbor]) {
@@ -36,19 +45,30 @@ class Graph {
       })
     }
     helper(vertex);
+  }
+
+  iterativeDFS(vertex){
+    let results = [];
+    this.lazyIterativeDFS(vertex, function(vertex){
+      results.push(vertex)
+    }
+    )
     return results;
   }
 
-  iterativeDFS(vertex) {
+
+  lazyIterativeDFS(vertex,callback) {
     let stack = [];
     let visited = {};
-    let results = [];
+
     stack.push(vertex);
     visited[vertex] = true;
 
     while (stack.length) {
       let current = stack.pop();
-      results.push(current);
+
+      callback(current);
+
       this.adjacencyList[current].forEach((neighbor) => {
         if (!visited[neighbor]) {
           stack.push(neighbor);
@@ -56,19 +76,26 @@ class Graph {
         }
       });
     }
-
-    return results;
   }
 
-  BFS(vertex) {
-    let results = [];
+
+  BFS(vertex){
+      let results = [];
+      this.lazyBFS(vertex, function(vertex){
+        results.push(vertex)
+      }
+      )
+      return results;
+  }
+
+  lazyBFS(vertex,callback) {
     let queue = [];
     let visited = {};
     queue.push(vertex);
 
     while(queue.length > 0) {
       let current = queue.shift();
-      results.push(current);
+      callback(current);
       visited[current] = true;
       this.adjacencyList[current].forEach((neighbor) => {
         if (!visited[neighbor]) {
@@ -76,6 +103,5 @@ class Graph {
         }
       });
     }
-    return results;
   }
 }
