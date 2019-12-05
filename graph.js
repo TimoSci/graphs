@@ -1,6 +1,9 @@
 class Graph {
   constructor() {
     this.adjacencyList = {};
+    this.recursiveDFS = this.lazyToEager(this.lazyRecursiveDFS)
+    this.iterativeDFS = this.lazyToEager(this.lazyIterativeDFS)
+    this.BFS = this.lazyToEager(this.lazyBFS)
   }
 
   addVertex(vertex) {
@@ -17,12 +20,6 @@ class Graph {
   removeEdge(v1, v2) {
     this.adjacencyList[v1] = this.adjacencyList[v1].filter(v => v !== v2);
     this.adjacencyList[v2] = this.adjacencyList[v2].filter(v => v !== v1);
-  }
-
-  recursiveDFS(vertex){
-    let results = [];
-    this.lazyRecursiveDFS(vertex, function(vertex){ results.push(vertex) } )
-    return results;
   }
 
   lazyRecursiveDFS(vertex,callback) {
@@ -44,12 +41,6 @@ class Graph {
     helper(vertex);
   }
 
-  iterativeDFS(vertex){
-    let results = [];
-    this.lazyIterativeDFS(vertex, function(vertex){ results.push(vertex) } )
-    return results;
-  }
-
   lazyIterativeDFS(vertex,callback) {
     let stack = [];
     let visited = {};
@@ -69,12 +60,6 @@ class Graph {
     }
   }
 
-  BFS(vertex){
-      let results = [];
-      this.lazyBFS(vertex, function(vertex){ results.push(vertex) })
-      return results;
-  }
-
   lazyBFS(vertex,callback) {
     let queue = [];
     let visited = {};
@@ -91,4 +76,16 @@ class Graph {
       });
     }
   }
+
+  // Higher order functions
+
+  lazyToEager(lazy_traversal){
+    lazy_traversal = lazy_traversal.bind(this);
+    return (vertex)=>{
+      let results = [];
+      lazy_traversal(vertex, function(vertex){ results.push(vertex) } )
+      return results;
+    }
+  }
+
 }
