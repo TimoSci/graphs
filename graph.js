@@ -61,11 +61,13 @@ class Graph {
   }
 
   lazyBFS(vertex,callback) {
-    let queue = [];
+    // let queue = [];
+    let queue = new DoublyLinkedList();
     let visited = {};
     queue.push(vertex);
     visited[vertex] = true;
-    while(queue.length > 0) {
+    // while(queue.length > 0) {
+    while(!queue.isempty()) {
       let current = queue.shift();
       callback(current);
       this.adjacencyList[current].forEach((neighbor) => {
