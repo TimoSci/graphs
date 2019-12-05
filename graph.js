@@ -21,10 +21,7 @@ class Graph {
 
   recursiveDFS(vertex){
     let results = [];
-    this.lazyRecursiveDFS(vertex, function(vertex){
-      results.push(vertex)
-    }
-    )
+    this.lazyRecursiveDFS(vertex, function(vertex){ results.push(vertex) } )
     return results;
   }
 
@@ -49,13 +46,9 @@ class Graph {
 
   iterativeDFS(vertex){
     let results = [];
-    this.lazyIterativeDFS(vertex, function(vertex){
-      results.push(vertex)
-    }
-    )
+    this.lazyIterativeDFS(vertex, function(vertex){ results.push(vertex) } )
     return results;
   }
-
 
   lazyIterativeDFS(vertex,callback) {
     let stack = [];
@@ -66,9 +59,7 @@ class Graph {
 
     while (stack.length) {
       let current = stack.pop();
-
       callback(current);
-
       this.adjacencyList[current].forEach((neighbor) => {
         if (!visited[neighbor]) {
           stack.push(neighbor);
@@ -78,13 +69,9 @@ class Graph {
     }
   }
 
-
   BFS(vertex){
       let results = [];
-      this.lazyBFS(vertex, function(vertex){
-        results.push(vertex)
-      }
-      )
+      this.lazyBFS(vertex, function(vertex){ results.push(vertex) })
       return results;
   }
 
@@ -92,14 +79,14 @@ class Graph {
     let queue = [];
     let visited = {};
     queue.push(vertex);
-
+    visited[vertex] = true;
     while(queue.length > 0) {
       let current = queue.shift();
       callback(current);
-      visited[current] = true;
       this.adjacencyList[current].forEach((neighbor) => {
         if (!visited[neighbor]) {
           queue.push(neighbor);
+          visited[neighbor] = true;
         }
       });
     }
