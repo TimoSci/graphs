@@ -1,11 +1,14 @@
 class Graph {
   constructor() {
     this.adjacencyList = {};
+    this.recursiveDFS = this.lazyToEager(this.lazyRecursiveDFS)
+    this.iterativeDFS = this.lazyToEager(this.lazyIterativeDFS)
+    this.BFS = this.lazyToEager(this.lazyBFS)
   }
 
   addVertex(vertex) {
     if(!this.adjacencyList[vertex]) {
-      this.adjacencyListVertex[vertex] = [];
+      this.adjacencyList[vertex] = [];
     }
   }
 
@@ -19,15 +22,15 @@ class Graph {
     this.adjacencyList[v2] = this.adjacencyList[v2].filter(v => v !== v1);
   }
 
-  recursiveDFS(vertex) {
-    let results = [];
+  lazyRecursiveDFS(vertex,callback) {
     const adjacencyList = this.adjacencyList;
     let visited = {};
 
     function helper(node) {
       if (!node) { return; }
 
-      results.push(node);
+      callback(node);
+
       visited[node] = true;
       adjacencyList[node].forEach((neighbor) => {
         if (!visited[neighbor]) {
@@ -36,46 +39,55 @@ class Graph {
       })
     }
     helper(vertex);
-    return results;
   }
 
-  iterativeDFS(vertex) {
+  lazyIterativeDFS(vertex,callback) {
     let stack = [];
     let visited = {};
-    let results = [];
+
     stack.push(vertex);
+    visited[vertex] = true;
 
     while (stack.length) {
       let current = stack.pop();
-      results.push(current);
-      visited[current] = true;
+      callback(current);
       this.adjacencyList[current].forEach((neighbor) => {
         if (!visited[neighbor]) {
           stack.push(neighbor);
+          visited[neighbor] = true;
         }
       });
     }
-
-    return results;
   }
 
-  BFS(vertex) {
-    let results = [];
-    let queue = [];
+  lazyBFS(vertex,callback) {
+    // let queue = [];
+    let queue = new DoublyLinkedList();
     let visited = {};
     queue.push(vertex);
-
-    while(queue.length > 0) {
+    visited[vertex] = true;
+    // while(queue.length > 0) {
+    while(!queue.isempty()) {
       let current = queue.shift();
-      results.push(current);
-      visited[current] = true;
+      callback(current);
       this.adjacencyList[current].forEach((neighbor) => {
         if (!visited[neighbor]) {
           queue.push(neighbor);
+          visited[neighbor] = true;
         }
       });
     }
-    return results;
   }
-}
 
+  // Higher order functions
+
+  lazyToEager(lazy_traversal){
+    lazy_traversal = lazy_traversal.bind(this);
+    return (vertex)=>{
+      let results = [];
+      lazy_traversal(vertex, function(vertex){ results.push(vertex) } )
+      return results;
+    }
+  }
+
+}
